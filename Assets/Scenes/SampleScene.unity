@@ -150,7 +150,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60254636}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3695b99008461e14eaed7b2ce185fde8, type: 3}
   m_Name: 
@@ -621,10 +621,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f9d8e9132bbc0409ea0d1759a5170a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iso: {fileID: 9174353043554410744, guid: 780b944104b0b294f9ea9358f42b459e, type: 3}
+  building: {fileID: 0}
   tempTm: {fileID: 1005203999}
   mainTm: {fileID: 1631092449}
-  m: {fileID: 60254636}
+  mouse: {fileID: 0}
 --- !u!1 &1631092446
 GameObject:
   m_ObjectHideFlags: 0
