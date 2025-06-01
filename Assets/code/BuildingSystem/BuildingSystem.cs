@@ -8,38 +8,39 @@ using UnityEngine.Tilemaps;
 public class BuildingSystem : MonoBehaviour
 {
 
-    public GameObject iso;
+    public GameObject building;
     public Tilemap tempTm;
     public Tilemap mainTm;
-    public GameObject m;
+    public GameObject mouse;
 
     private Vector3 mousePos;
     private Vector3Int cellPos;
     private GridLayout grid;
     private Vector3 offset = new Vector3(0.5f, 0.5f, 0f);
-    private Dictionary<BuildTileType, Tile> buildTileDic = new Dictionary<BuildTileType, Tile>();
-    private Dictionary<BuildingTileType, GameObject> buildingTileDic = new Dictionary<BuildingTileType, GameObject>();
+    private Dictionary<TileType, Tile> buildTileDic = new Dictionary<TileType, Tile>();
+    private Dictionary<BuildingType, GameObject> buildingTileDic = new Dictionary<BuildingType, GameObject>();
     private Vector3Int oldCellPos;
 
-    private SpriteRenderer mR;
-    private SpriteRenderer isoR;
+    private SpriteRenderer mouseRen;
+    private SpriteRenderer buildingRen;
 
     void Start()
     {
         grid = this.GetComponent<GridLayout>();
-        mR = m.GetComponent<SpriteRenderer>();
-        isoR = iso.GetComponent<SpriteRenderer>();
+        mouseRen = mouse.GetComponent<SpriteRenderer>();
+        buildingRen = building.GetComponent<SpriteRenderer>();
 
-        mR.sprite = isoR.sprite;
-        mR.color = isoR.color;
+        mouseRen.sprite = buildingRen.sprite;
+        mouseRen.color = buildingRen.color;
 
-        buildTileDic.Add(BuildTileType.Empty, Resources.Load<Tile>("palette/build/empty"));
-        buildTileDic.Add(BuildTileType.White, Resources.Load<Tile>("palette/build/white"));
-        buildTileDic.Add(BuildTileType.Red, Resources.Load<Tile>("palette/build/red"));
-        buildTileDic.Add(BuildTileType.Green, Resources.Load<Tile>("palette/build/green"));
-        buildTileDic.Add(BuildTileType.Road, Resources.Load<Tile>("palette/build/road"));
+        buildTileDic.Add(TileType.Empty, null);
+        buildTileDic.Add(TileType.White, Resources.Load<Tile>("palette/build/white"));
+        buildTileDic.Add(TileType.Red, Resources.Load<Tile>("palette/build/red"));
+        buildTileDic.Add(TileType.Green, Resources.Load<Tile>("palette/build/green"));
+        buildTileDic.Add(TileType.Road, Resources.Load<Tile>("palette/build/road"));
 
-        buildingTileDic.Add(BuildingTileType.Home, iso);
+        buildingTileDic.Add(BuildingType.Build, building);
+        buildingTileDic.Add(BuildingType.Raycast, building);
     }
 
     void FixedUpdate() {
@@ -49,32 +50,46 @@ public class BuildingSystem : MonoBehaviour
         // visual
         if (oldCellPos != cellPos) {
             if (IsPlaceble()) {
-                tempTm.SetTile(cellPos, buildTileDic[BuildTileType.Green]);
+                tempTm.SetTile(cellPos, buildTileDic[TileType.Green]);
             }else {
-                tempTm.SetTile(cellPos, buildTileDic[BuildTileType.Red]);
+                tempTm.SetTile(cellPos, buildTileDic[TileType.Red]);
             }
 
-            tempTm.SetTile(oldCellPos, buildTileDic[BuildTileType.Empty]);
-            m.transform.position = grid.CellToWorld(cellPos)+offset;
+            tempTm.SetTile(oldCellPos, buildTileDic[TileType.Empty]);
+            // mouse.transform.position = grid.CellToWorld(cellPos)+offset; // mouse movement
             oldCellPos = cellPos;
         }
 
         // create building
-        if (Input.GetMouseButton(0) && IsPlaceble()) {
-                Instantiate(buildingTileDic[BuildingTileType.Home], grid.CellToWorld(cellPos)+offset, Quaternion.identity);
-                mainTm.SetTile(cellPos, buildTileDic[BuildTileType.Empty]);
+        if (false) {
+            if (Input.GetMouseButton(0) && IsPlaceble()) {
+                    Instantiate(buildingTileDic[BuildingType.Build], grid.CellToWorld(cellPos)+offset, Quaternion.identity);
+                    mainTm.SetTile(cellPos, buildTileDic[TileType.Empty]);
+            }
+        }else {
+            Vector3 pointA = Vector3.zero;
+            Vector3 pointB = Vector3.zero;
+            if (Input.GetMouseButton(0) && IsPlaceble()) {
+                pointA = mousePos;
+                while (pointB == Vector3.zero) {
+                    if (Input.GetMouseButton(0) && IsPlaceble()) {
+                        pointB = mousePos;
+                        Vector3 Direction = (pointB-pointA).normalized;
+                    }
+                }
+            }
         }
     }
 
     private bool IsPlaceble() {
-        if (mainTm.GetTile<Tile>(cellPos) == buildTileDic[BuildTileType.White]) {
+        if (mainTm.GetTile<Tile>(cellPos) == buildTileDic[TileType.White]) {
             return true;
         }else {
             return false;
         }
     }
 
-    public enum BuildTileType {
+    public enum TileType {
         Empty,
         White,
         Red,
@@ -82,7 +97,8 @@ public class BuildingSystem : MonoBehaviour
         Road
     }
 
-    public enum BuildingTileType {
-        Home
+    public enum BuildingType {
+        Build,
+        Raycast
     }
 }
