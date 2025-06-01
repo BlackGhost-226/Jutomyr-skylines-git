@@ -33,7 +33,7 @@ public class BuildingSystem : MonoBehaviour
         mR.sprite = isoR.sprite;
         mR.color = isoR.color;
 
-        buildTileDic.Add(BuildTileType.Empty, null);
+        buildTileDic.Add(BuildTileType.Empty, Resources.Load<Tile>("palette/build/empty"));
         buildTileDic.Add(BuildTileType.White, Resources.Load<Tile>("palette/build/white"));
         buildTileDic.Add(BuildTileType.Red, Resources.Load<Tile>("palette/build/red"));
         buildTileDic.Add(BuildTileType.Green, Resources.Load<Tile>("palette/build/green"));

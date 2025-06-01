@@ -9,13 +9,13 @@ public class Building : MonoBehaviour
     public bool roadNeeded, elecrisityNeeded;
     public int coast, person;
 
-    private bool conected = false;
+    public bool conected = false;
 
 
     private GridLayout grid;
     private Tilemap mainTm;
     private Vector3Int posInGrid;
-    private List<Tile> tilesAround = new List<Tile>();
+    private List<Vector3Int> tilesPosAround = new List<Vector3Int>();
 
 
     void Start() {
@@ -41,28 +41,34 @@ public class Building : MonoBehaviour
             // [*][*][*]
             // [ ] 0 [ ]
             // [ ][ ][ ]
-            tilesAround.Add(mainTm.GetTile<Tile>(posInGrid + new Vector3Int(0, 1, 0)));
-            tilesAround.Add(mainTm.GetTile<Tile>(posInGrid + new Vector3Int(1, 1, 0)));
-            tilesAround.Add(mainTm.GetTile<Tile>(posInGrid + new Vector3Int(-1, 1, 0)));
+            tilesPosAround.Add(posInGrid + new Vector3Int(0, 1, 0));
+            tilesPosAround.Add(posInGrid + new Vector3Int(1, 1, 0));
+            tilesPosAround.Add(posInGrid + new Vector3Int(-1, 1, 0));
 
             // [ ][ ][ ]
             // [*] 0 [*]
             // [ ][ ][ ]
-            tilesAround.Add(mainTm.GetTile<Tile>(posInGrid + new Vector3Int(1, 0, 0)));
-            tilesAround.Add(mainTm.GetTile<Tile>(posInGrid + new Vector3Int(-1, 0, 0)));
+            tilesPosAround.Add(posInGrid + new Vector3Int(1, 0, 0));
+            tilesPosAround.Add(posInGrid + new Vector3Int(-1, 0, 0));
 
             // [ ][ ][ ]
             // [ ] 0 [ ]
             // [*][*][*]
-            tilesAround.Add(mainTm.GetTile<Tile>(posInGrid + new Vector3Int(0, -1, 0)));
-            tilesAround.Add(mainTm.GetTile<Tile>(posInGrid + new Vector3Int(1, -1, 0)));
-            tilesAround.Add(mainTm.GetTile<Tile>(posInGrid + new Vector3Int(-1, -1, 0)));
+            tilesPosAround.Add(posInGrid + new Vector3Int(0, -1, 0));
+            tilesPosAround.Add(posInGrid + new Vector3Int(1, -1, 0));
+            tilesPosAround.Add(posInGrid + new Vector3Int(-1, -1, 0));
     }
 
     void FixedUpdate() {
-        foreach (var tile in tilesAround) {
-            if (tile == null) {
-                Debug.Log(tile);
+        foreach (var tilePos in tilesPosAround) {
+            foreach (var building in FindObjectsOfType<GameObject>()){
+                if (building.tag == "bildings") {
+                    if (grid.WorldToCell(building.transform.position) == tilePos) {
+                        if (building.GetComponent<Building>().conected == true) {
+                            conected = true;
+                        }
+                    }
+                }
             }
         }
     }
