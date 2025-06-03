@@ -1,14 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Vector3 = UnityEngine.Vector3;
+using Quaternion = UnityEngine.Quaternion;
+using System.Threading.Tasks;
+using System;
+using System.Linq;
+using UnityEditor.ProjectWindowCallback;
 
 public class BuildingSystem : MonoBehaviour
 {
 
+    public bool useLines;
     public GameObject building;
+    public GameObject line;
+    public GameObject lineBase;
     public Tilemap tempTm;
     public Tilemap mainTm;
     public GameObject mouse;
@@ -23,6 +33,8 @@ public class BuildingSystem : MonoBehaviour
 
     private SpriteRenderer mouseRen;
     private SpriteRenderer buildingRen;
+    private List<Vector3Int> points = new List<Vector3Int>();
+
 
     void Start()
     {
@@ -40,18 +52,24 @@ public class BuildingSystem : MonoBehaviour
         buildTileDic.Add(TileType.Road, Resources.Load<Tile>("palette/build/road"));
 
         buildingTileDic.Add(BuildingType.Build, building);
-        buildingTileDic.Add(BuildingType.Raycast, building);
+        buildingTileDic.Add(BuildingType.Line, line);
+        buildingTileDic.Add(BuildingType.LineBase, lineBase);
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         cellPos = grid.WorldToCell(mousePos);
 
         // visual
-        if (oldCellPos != cellPos) {
-            if (IsPlaceble()) {
+        if (oldCellPos != cellPos)
+        {
+            if (IsPlaceble())
+            {
                 tempTm.SetTile(cellPos, buildTileDic[TileType.Green]);
-            }else {
+            }
+            else
+            {
                 tempTm.SetTile(cellPos, buildTileDic[TileType.Red]);
             }
 
@@ -61,35 +79,69 @@ public class BuildingSystem : MonoBehaviour
         }
 
         // create building
-        if (false) {
-            if (Input.GetMouseButton(0) && IsPlaceble()) {
-                    Instantiate(buildingTileDic[BuildingType.Build], grid.CellToWorld(cellPos)+offset, Quaternion.identity);
-                    mainTm.SetTile(cellPos, buildTileDic[TileType.Empty]);
+        if (!useLines)
+        {
+            if (Input.GetMouseButton(0) && IsPlaceble())
+            {
+                Instantiate(buildingTileDic[BuildingType.Build], grid.CellToWorld(cellPos) + offset, Quaternion.identity);
+                mainTm.SetTile(cellPos, buildTileDic[TileType.Empty]);
             }
-        }else {
-            Vector3 pointA = Vector3.zero;
-            Vector3 pointB = Vector3.zero;
-            if (Input.GetMouseButton(0) && IsPlaceble()) {
-                pointA = mousePos;
-                while (pointB == Vector3.zero) {
-                    if (Input.GetMouseButton(0) && IsPlaceble()) {
-                        pointB = mousePos;
-                        Vector3 Direction = (pointB-pointA).normalized;
+        }
+        else
+        {
+            if (Input.GetMouseButton(0) && IsPlaceble() && (points.Count() == 0 || points.Last() != cellPos))
+            {
+                Debug.Log("Add");
+                points.Add(cellPos);
+            }
+            else if (Input.GetKey(KeyCode.Space) && points.Count > 1)
+            {
+                // setup
+                Debug.Log("Ren");
+                Vector3Int[] pointsArray = points.ToArray();
+                Vector3[] linePointsArray = new Vector3[pointsArray.Length];
+                for (int i = 0; i < pointsArray.Length; i++)
+                {
+                    linePointsArray[i] = grid.CellToWorld(pointsArray[i]) + offset;
+                }
+
+                // line render
+                GameObject lineRef;
+                lineRef = Instantiate(buildingTileDic[BuildingType.Line], grid.CellToWorld(cellPos) + offset, Quaternion.identity);
+                lineRef.GetComponent<LineControler>().SetUpLine(linePointsArray);
+                points = new List<Vector3Int>();
+
+                // line base
+                GameObject lineBaseRef;
+                for (int i = 0; i < linePointsArray.Length; i++)
+                {
+                    lineBaseRef = Instantiate(buildingTileDic[BuildingType.LineBase], linePointsArray[i], Quaternion.identity);
+                    if (i - 1 >= 0)
+                    {
+                        lineBaseRef.GetComponent<LineBaseControler>().priviosePoint = linePointsArray[i - 1];
                     }
                 }
             }
         }
     }
-
-    private bool IsPlaceble() {
-        if (mainTm.GetTile<Tile>(cellPos) == buildTileDic[TileType.White]) {
+    private bool IsPlaceble()
+    {
+        if (mainTm.GetTile<Tile>(cellPos) == buildTileDic[TileType.White])
+        {
             return true;
-        }else {
+        }
+        else
+        {
             return false;
         }
     }
 
-    public enum TileType {
+    // private void OnDrawGizmos() {
+    //     Gizmos.DrawLine(po);
+    // }
+
+    public enum TileType
+    {
         Empty,
         White,
         Red,
@@ -97,8 +149,10 @@ public class BuildingSystem : MonoBehaviour
         Road
     }
 
-    public enum BuildingType {
+    public enum BuildingType
+    {
         Build,
-        Raycast
+        Line,
+        LineBase
     }
 }

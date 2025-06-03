@@ -621,10 +621,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f9d8e9132bbc0409ea0d1759a5170a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  building: {fileID: 0}
+  useLines: 1
+  building: {fileID: 9174353043554410744, guid: 780b944104b0b294f9ea9358f42b459e, type: 3}
+  line: {fileID: 4798756897207304027, guid: ddb4a8d8f77a4b8498b3692b30d02c27, type: 3}
+  lineBase: {fileID: 223837984424399071, guid: 4ed27d36655689941ae5eb7f48c335e8, type: 3}
   tempTm: {fileID: 1005203999}
   mainTm: {fileID: 1631092449}
-  mouse: {fileID: 0}
+  mouse: {fileID: 60254636}
 --- !u!1 &1631092446
 GameObject:
   m_ObjectHideFlags: 0
