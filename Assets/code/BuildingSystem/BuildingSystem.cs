@@ -73,6 +73,7 @@ public class BuildingSystem : MonoBehaviour
         buildingRen = building.GetComponent<SpriteRenderer>();
         mouseRen.sprite = buildingRen.sprite;
         mouseRen.color = buildingRen.color;
+        mouseRen.transform.localScale = buildingRen.transform.localScale;
 
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         cellPos = grid.WorldToCell(mousePos);
