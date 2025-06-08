@@ -146,7 +146,7 @@ MonoBehaviour:
   coast: 15
   elecrisityProduse: 15
   moneyProduse: -15
-  roadNeeded: 0
+  roadNeeded: 1
   elecrisityNeeded: 0
   person: -2
   conected: 1
