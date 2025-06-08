@@ -12,8 +12,8 @@ public class City : MonoBehaviour
     private float moneyIncome;
     public int money;
 
-    private float elecrisityLeft;
-    private int personLeft;
+   [HideInInspector] public float elecrisityLeft;
+    [HideInInspector] public int personLeft;
     void Start()
     {
         Invoke("Cycle", cycleTime);
