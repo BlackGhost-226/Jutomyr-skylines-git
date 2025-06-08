@@ -138,4 +138,10 @@ public class Building : MonoBehaviour
         }
     }
 
+    public void Distory()
+    {
+        mainTm.SetTile(grid.WorldToCell(this.transform.position), Resources.Load<Tile>("palette/build/white"));
+        Destroy(this.gameObject);
+    }
+
 }

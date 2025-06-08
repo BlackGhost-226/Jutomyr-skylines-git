@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class UiControler : MonoBehaviour
 {
-    public BuildingSystem BS;
+    public GridLayout grid;
     private Dictionary<Building, GameObject> buildingDic = new Dictionary<Building, GameObject>();
     private Dictionary<Line, GameObject> lineDic = new Dictionary<Line, GameObject>();
     private Dictionary<LineBase, GameObject> lineBaseDic = new Dictionary<LineBase, GameObject>();
@@ -30,33 +30,54 @@ public class UiControler : MonoBehaviour
 
     public void ChangeToBuildHome()
     {
-        BS.useLines = false;
-        BS.building = buildingDic[Building.Home];
+        grid.GetComponent<Distroy>().enabled = false;
+        grid.GetComponent<BuildingSystem>().enabled = true;
+
+        grid.GetComponent<BuildingSystem>().useLines = false;
+        grid.GetComponent<BuildingSystem>().building = buildingDic[Building.Home];
     }
 
     public void ChangeToBuildStore()
     {
-        BS.useLines = false;
-        BS.building = buildingDic[Building.Store];
+        grid.GetComponent<Distroy>().enabled = false;
+        grid.GetComponent<BuildingSystem>().enabled = true;
+
+        grid.GetComponent<BuildingSystem>().useLines = false;
+        grid.GetComponent<BuildingSystem>().building = buildingDic[Building.Store];
     }
 
     public void ChangeToBuildPowerStation()
     {
-        BS.useLines = false;
-        BS.building = buildingDic[Building.PowerStation];
+        grid.GetComponent<Distroy>().enabled = false;
+        grid.GetComponent<BuildingSystem>().enabled = true;
+
+        grid.GetComponent<BuildingSystem>().useLines = false;
+        grid.GetComponent<BuildingSystem>().building = buildingDic[Building.PowerStation];
     }
 
     public void ChangeToLineRoad()
     {
-        BS.useLines = true;
-        BS.line = lineDic[Line.Road];
-        BS.lineBase = lineBaseDic[LineBase.Road];
+        grid.GetComponent<Distroy>().enabled = false;
+        grid.GetComponent<BuildingSystem>().enabled = true;
+
+        grid.GetComponent<BuildingSystem>().useLines = true;
+        grid.GetComponent<BuildingSystem>().line = lineDic[Line.Road];
+        grid.GetComponent<BuildingSystem>().lineBase = lineBaseDic[LineBase.Road];
     }
     public void ChangeToLineWire()
     {
-        BS.useLines = true;
-        BS.line = lineDic[Line.Wire];
-        BS.lineBase = lineBaseDic[LineBase.Wire];
+        grid.GetComponent<Distroy>().enabled = false;
+        grid.GetComponent<BuildingSystem>().enabled = true;
+
+        grid.GetComponent<BuildingSystem>().useLines = true;
+        grid.GetComponent<BuildingSystem>().line = lineDic[Line.Wire];
+        grid.GetComponent<BuildingSystem>().lineBase = lineBaseDic[LineBase.Wire];
+    }
+
+    public void DistroyMode()
+    {
+        grid.GetComponent<Distroy>().enabled = true;
+        grid.GetComponent<BuildingSystem>().enabled = false;
     }
 
     public enum Building
