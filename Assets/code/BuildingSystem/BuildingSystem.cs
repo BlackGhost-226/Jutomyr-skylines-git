@@ -56,7 +56,6 @@ public class BuildingSystem : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log((int)Math.Round(lineCoast, 0));
         if (buildingTileDic[BuildingType.Build] != building)
         {
             buildingTileDic[BuildingType.Build] = building;
@@ -156,11 +155,11 @@ public class BuildingSystem : MonoBehaviour
                     lineBaseRef = Instantiate(buildingTileDic[BuildingType.LineBase], linePointsArray[i], Quaternion.identity);
                     if (i - 1 >= 0)
                     {
-                        lineBaseRef.GetComponent<LineBaseControler>().priviosePoint = grid.WorldToCell(linePointsArray[i - 1]);
+                        lineBaseRef.GetComponent<LineBaseControler>().priviosePointPos = grid.WorldToCell(linePointsArray[i - 1]);
                     }
                     else
                     {
-                        lineBaseRef.GetComponent<LineBaseControler>().priviosePoint = Vector3Int.zero;
+                        lineBaseRef.GetComponent<LineBaseControler>().priviosePointPos = Vector3Int.zero;
                     }
                 }
 

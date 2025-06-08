@@ -8,13 +8,15 @@ using UnityEngine.Tilemaps;
 
 public class LineBaseControler : MonoBehaviour
 {
-    public Vector3Int priviosePoint;
+    [HideInInspector] public Vector3Int priviosePointPos;
+    private GameObject priviosePoint;
     public Tile tile;
     private Vector3Int pos;
     private Tilemap mainTm;
     private GridLayout grid;
 
     public int coast;
+    public bool filIn, eleTransform;
 
     void Start()
     {
@@ -30,18 +32,34 @@ public class LineBaseControler : MonoBehaviour
             }
         }
 
-        if (priviosePoint != Vector3Int.zero)
+        foreach (var lineBase in FindObjectsOfType<GameObject>())
         {
-            pos = grid.WorldToCell(pos);
-            priviosePoint = grid.WorldToCell(priviosePoint);
-
-            DrawLine(priviosePoint, pos);
-            Debug.Log(priviosePoint + " | " + pos);
+            if (lineBase.GetComponent<LineBaseControler>() != null && lineBase.transform.position == priviosePointPos)
+            {
+                priviosePoint = lineBase;
+            }
         }
-        else
+
+        if (filIn)
         {
-            mainTm.SetTile(pos, tile);
-            Debug.Log("zero");
+            if (priviosePointPos != Vector3Int.zero)
+            {
+                pos = grid.WorldToCell(pos);
+                priviosePointPos = grid.WorldToCell(priviosePointPos);
+
+                DrawLine(priviosePointPos, pos);
+                Debug.Log(priviosePointPos + " | " + pos);
+            }
+            else
+            {
+                mainTm.SetTile(pos, tile);
+                Debug.Log("zero");
+            }
+        }
+
+        if (eleTransform)
+        {
+            this.GetComponent<Building>().connectedBuilding = priviosePoint;
         }
     }
 

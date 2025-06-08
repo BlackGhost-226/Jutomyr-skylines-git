@@ -17,7 +17,7 @@ public class Building : MonoBehaviour
     private Tilemap mainTm;
     private Vector3Int posInGrid;
     private List<Vector3Int> tilesPosAround = new List<Vector3Int>();
-    private GameObject connectedBuilding;
+    [HideInInspector] public GameObject connectedBuilding;
 
 
     void Start()
