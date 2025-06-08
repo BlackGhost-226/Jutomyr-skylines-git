@@ -143,9 +143,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f97a41c182bfe7a4892de5efe36ebd50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coast: 15
   elecrisityProduse: 15
   moneyProduse: -15
   roadNeeded: 0
-  elecrisityNeeded: 1
-  coast: 15
+  elecrisityNeeded: 0
   person: -2
+  conected: 1
+  connectedBuilding: {fileID: 0}

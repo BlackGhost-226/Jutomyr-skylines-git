@@ -10,7 +10,7 @@ public class Building : MonoBehaviour
     public bool roadNeeded, elecrisityNeeded;
     public int person;
 
-    public bool conected = false;
+    [HideInInspector] public bool conected = false;
 
 
     private GridLayout grid;
